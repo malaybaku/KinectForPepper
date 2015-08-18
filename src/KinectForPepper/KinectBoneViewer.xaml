@@ -1,0 +1,19 @@
+﻿<Window x:Class="Baku.KinectForPepper.KinectBoneViewer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Baku.KinectForPepper"
+        mc:Ignorable="d"
+        Background="Black"
+        Title="KinectBoneViewer" Height="300" Width="300">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding CloseWindowCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Image Source="{Binding ImageSource}"/>
+    </Grid>
+</Window>
