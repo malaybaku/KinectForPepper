@@ -2,10 +2,13 @@
 <Package name="KinectForPepper" format_version="4">
     <Manifest src="manifest.xml" />
     <BehaviorDescriptions>
-        <BehaviorDescription name="behavior" src="behavior_1" xar="behavior.xar" />
+        <BehaviorDescription name="behavior" src="." xar="behavior.xar" />
     </BehaviorDescriptions>
     <Dialogs />
-    <Resources />
+    <Resources>
+        <File name="during_play" src="html/during_play.png" />
+        <File name="start_image" src="html/start_image.png" />
+    </Resources>
     <Topics />
     <IgnoredPaths />
 </Package>

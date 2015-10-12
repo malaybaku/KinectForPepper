@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{18335E2B-F176-4245-B6D0-AECE6870A73B}</ProjectGuid>
+    <ProjectGuid>{04D7C3BD-D2AE-4857-B0B0-20A507F3E1C1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Baku.KinectForPepper</RootNamespace>
@@ -35,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Expression.Drawing, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.TeamFoundation.Controls, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -58,39 +59,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="KinectBoneViewer.xaml.cs">
+    <Compile Include="Models\BodyToJointAngle.cs" />
+    <Compile Include="Models\ModelCore.cs" />
+    <Compile Include="Models\AngleLogger.cs" />
+    <Compile Include="Views\Converter\BoolToConnectionStatusStringConverter.cs" />
+    <Compile Include="Views\Converter\BoolToColorConverter.cs" />
+    <Compile Include="Models\FPSWatcher.cs" />
+    <Compile Include="KinectBodyDrawer.cs" />
+    <Compile Include="Models\KinectBoneConnections.cs" />
+    <Compile Include="Views\KinectBoneViewer.xaml.cs">
       <DependentUpon>KinectBoneViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Quartanion.cs" />
-    <Compile Include="QuartanionFromKinectVector4.cs" />
-    <Compile Include="RobotJointAngles.cs" />
-    <Page Include="KinectBoneViewer.xaml">
+    <Compile Include="ViewModels\KinectBoneViewerViewModel.cs" />
+    <Compile Include="Models\KinectConnector.cs" />
+    <Compile Include="Models\LowPassFilter.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Models\Quartanion.cs" />
+    <Compile Include="Models\QuartanionFromKinectVector4.cs" />
+    <Compile Include="Models\RobotJointAngles.cs" />
+    <Page Include="Views\KinectBoneViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="AngleDataSender.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BodyToJointAngle.cs" />
-    <Compile Include="BoolToColorConverter.cs" />
-    <Compile Include="FPSWatcher.cs" />
-    <Compile Include="KinectBodyDrawer.cs" />
-    <Compile Include="KinectBoneConnections.cs" />
-    <Compile Include="KinectBoneViewerViewModel.cs" />
-    <Compile Include="KinectConnector.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="Models\AngleDataSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -45,24 +45,24 @@ namespace Baku.KinectForPepper
         private static readonly Pen bodyColor = new Pen(Brushes.Red, 6);
         #endregion
 
-        /// <summary>描画を行うターゲットです。</summary>
         private DrawingGroup drawingGroup;
-
-        /// <summary>描画の結果の取得元です。</summary>
-        private DrawingImage imageSource;
 
         private KinectConnector kinectConnector;
 
+        /// <summary></summary>
+        /// <param name="kinectConnector"></param>
         public KinectBodyDrawer(KinectConnector kinectConnector)
         {
             this.kinectConnector = kinectConnector;
 
             drawingGroup = new DrawingGroup();
-            imageSource = new DrawingImage(drawingGroup);
+            ImageSource = new DrawingImage(drawingGroup);
+
+            kinectConnector.BodyUpdated += (_, e) => Draw(e.Body);
         }
 
         /// <summary>描画結果を表示可能なソースを取得します。</summary>
-        public ImageSource ImageSource => imageSource;
+        public ImageSource ImageSource { get; }
 
         /// <summary>描画対象となるボディを指定して描画情報を更新します。</summary>
         public void Draw(Body body)

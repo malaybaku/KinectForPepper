@@ -38,6 +38,8 @@
 
         public const int JointNumberToUse = 13;
 
+        //NOTE: 首の方向はうまく取れない。
+
         /// <summary>リモート指示で用いる角度一覧を取得します。</summary>
         public float[] Angles
         {
@@ -45,6 +47,8 @@
             {
                 return new float[]
                 {
+                    //HeadYaw,
+                    //HeadPitch,
                     LShoulderPitch,
                     LShoulderRoll,
                     LElbowYaw,
@@ -58,6 +62,30 @@
                     HipPitch,
                     LHand,
                     RHand
+                };
+            }
+        }
+
+        /// <summary>角度名を取得</summary>
+        public static string[] AngleNames
+        {
+            get
+            {
+                return new string[]
+                {
+                    nameof(LShoulderPitch),
+                    nameof(LShoulderRoll),
+                    nameof(LElbowYaw),
+                    nameof(LElbowRoll),
+                    nameof(LWristYaw),
+                    nameof(RShoulderPitch),
+                    nameof(RShoulderRoll),
+                    nameof(RElbowYaw),
+                    nameof(RElbowRoll),
+                    nameof(RWristYaw),
+                    nameof(HeadPitch),
+                    nameof(LHand),
+                    nameof(RHand)
                 };
             }
         }

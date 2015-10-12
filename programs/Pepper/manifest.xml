@@ -10,7 +10,7 @@
   <language>en_US</language>
  </descriptionLanguages>
  <contents>
-  <behaviorContent path="behavior_1">
+  <behaviorContent path=".">
    <userRequestable/>
    <nature>interactive</nature>
    <permissions/>

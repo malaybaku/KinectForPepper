@@ -14,6 +14,7 @@ namespace Baku.KinectForPepper
             SetHands(robot, body);
             SetHip(robot, body);
             SetWristYaws(robot, body);
+            SetHead(robot, body);
         }
 
         /// <summary>指定した関節の方向への回転を取得します。</summary>
@@ -71,7 +72,22 @@ namespace Baku.KinectForPepper
                 else
                 {
                     rShoulderPitch = (float)Math.Asin(elbowPosFromShoulder.X / Math.Cos(rShoulderRoll));
+                    //追加処理: Pitchは360度分の自由度があるのだがAsinだと180度しか分解能ないので
+                    //Z座標の正負情報を使って360度に対応させる
+                    //具体的にはZ < 0 のときピッチは[-180, -90]か[90, 180]の範囲に入る
+                    if (elbowPosFromShoulder.Z < 0)
+                    {
+                        if (rShoulderPitch > 0)
+                        {
+                            rShoulderPitch = (float)Math.PI - rShoulderPitch;
+                        }
+                        else
+                        {
+                            rShoulderPitch = (float)(-Math.PI) - rShoulderPitch;
+                        }
+                    }
                 }
+
             }
 
             //ヒジのZベクトルつまりヒジの回転軸ベクトルの向き(と上のShoulderPitch)を用いてElbowYawを特定
@@ -83,9 +99,13 @@ namespace Baku.KinectForPepper
             };
             //noRollRElbowと実際のヒジZベクトルのズレはElbowYaw回転によって説明される、というノリで計算。
             //外積を用いているのはAcos関数だけだと回転方向が定まらない(どっち回転でもプラス扱いになる)ため
-            float rElbowYaw = (float)(
-                Math.Acos(noRollRElbow.Product(elbowZFromShoulder)) *
-                Math.Sign(noRollRElbow.Cross(elbowZFromShoulder).Product(elbowPosFromShoulder))
+            //float rElbowYaw = (float)(
+            //    Math.Acos(noRollRElbow.Product(elbowZFromShoulder)) *
+            //    Math.Sign(noRollRElbow.Cross(elbowZFromShoulder).Product(elbowPosFromShoulder))
+            //    );
+            //修正:たぶんこっちの方が計算安定する
+            float rElbowYaw = (float)Math.Asin(
+                noRollRElbow.Cross(elbowZFromShoulder).Product(elbowPosFromShoulder)
                 );
 
             //ヒジの曲がり具合を取得: 単に内積とって角度差を見ればOK
@@ -150,21 +170,39 @@ namespace Baku.KinectForPepper
                 else
                 {
                     lShoulderPitch = (float)Math.Asin(-elbowPosFromShoulder.X / Math.Cos(lShoulderRoll));
+                    //追加処理: Pitchは360度分の自由度があるのだがAsinだと180度しか分解能ないので
+                    //Z座標の正負情報を使って360度に対応させる
+                    //具体的にはZ < 0 のときピッチは[-180, -90]か[90, 180]の範囲に入る
+                    if (elbowPosFromShoulder.Z < 0)
+                    {
+                        if (lShoulderPitch > 0)
+                        {
+                            lShoulderPitch = (float)Math.PI - lShoulderPitch;
+                        }
+                        else
+                        {
+                            lShoulderPitch = (float)(-Math.PI) - lShoulderPitch;
+                        }
+                    }
                 }
             }
 
             //ヒジのZベクトルつまりヒジの回転軸ベクトルの向き(と上のShoulderPitch)を用いてElbowYawを特定
             //このnoRollRElbowはElbowYaw=0の場合のヒジZベクトルの向きである(導出は手計算)
-            var noRollRElbow = new Quartanion
+            var noRollLElbow = new Quartanion
             {
                 X = -(float)Math.Cos(lShoulderPitch),
                 Z = -(float)Math.Sin(lShoulderPitch)
             };
             //noRollRElbowと実際のヒジZベクトルのズレはElbowYaw回転によって説明される、というノリで計算。
             //外積を用いているのはAcos関数だけだと回転方向が定まらない(どっち回転でもプラス扱いになる)ため
-            float lElbowYaw = (float)(
-                Math.Acos(noRollRElbow.Product(elbowZFromShoulder)) *
-                Math.Sign(noRollRElbow.Cross(elbowZFromShoulder).Product(elbowPosFromShoulder))
+            //float lElbowYaw = (float)(
+            //    Math.Acos(noRollLElbow.Product(elbowZFromShoulder)) *
+            //    Math.Sign(noRollLElbow.Cross(elbowZFromShoulder).Product(elbowPosFromShoulder))
+            //    );
+            //修正:たぶんこっちの方が計算安定する
+            float lElbowYaw = (float)Math.Asin(
+                noRollLElbow.Cross(elbowZFromShoulder).Product(elbowPosFromShoulder)
                 );
 
             //ヒジの曲がり具合を取得: 単に内積とって角度差を見ればOK
@@ -214,13 +252,14 @@ namespace Baku.KinectForPepper
             if (body.Joints[JointType.ElbowRight].TrackingState == TrackingState.Tracked &&
                 body.Joints[JointType.WristRight].TrackingState == TrackingState.Tracked)
             {
+                //右肘Z軸: ウルトラマンのポーズをとったときのヒジ外側向き
                 var rElbowZ = Quartanion.UnitZ.RotateBy(GetOrientation(body, JointType.ElbowRight));
                 var rWristY = Quartanion.UnitY.RotateBy(GetOrientation(body, JointType.WristRight));
+                //右手X軸: 手の甲向き
                 var rWristX = Quartanion.UnitX.RotateBy(GetOrientation(body, JointType.WristRight));
 
-                var rCos = rElbowZ.Product(rWristX);
-                double rSign = Math.Sign(rElbowZ.Cross(rWristX).Product(rWristY));
-                robot.RWristYaw = (float)(Math.Acos(rCos) * rSign);
+                //外積の絶対値はSinというアレ。あとlElbowZ.Cross(lWristX)はlWristYと並行
+                robot.RWristYaw = (float)Math.Asin(rElbowZ.Cross(rWristX).Product(rWristY));
             }
             #endregion
 
@@ -230,15 +269,40 @@ namespace Baku.KinectForPepper
             {
                 var lElbowZ = Quartanion.UnitZ.RotateBy(GetOrientation(body, JointType.ElbowLeft));
                 var lWristY = Quartanion.UnitY.RotateBy(GetOrientation(body, JointType.WristLeft));
-                //マイナスつけてるのは右手のとX軸が逆向き(右手X軸: 手の甲向き, 左手X軸: 手の平向き)なため
+                //左手X軸は手の平向きで右手のと逆なのでマイナスかけて戻す
                 var lWristX = -Quartanion.UnitX.RotateBy(GetOrientation(body, JointType.WristLeft));
 
-                var lCos = lElbowZ.Product(lWristX);
-                int lSign = Math.Sign(lElbowZ.Cross(lWristX).Product(lWristY));
-                robot.LWristYaw = (float)(Math.Acos(lCos) * lSign);
+                //外積の絶対値はSinというアレ。あとlElbowZ.Cross(lWristX)はlWristYと並行
+                robot.LWristYaw = (float)Math.Asin(lElbowZ.Cross(lWristX).Product(lWristY));
             }
             #endregion
         }
+
+        /// <summary>首の角度を設定 FIXME: 現状はヨー角のみ</summary>
+        private static void SetHead(RobotJointAngles robot, Body body)
+        {
+            var neck = QuartanionFactory.FromVector4(body.JointOrientations[JointType.Neck].Orientation);
+            var spine = QuartanionFactory.FromVector4(body.JointOrientations[JointType.SpineShoulder].Orientation);
+
+            var neckZ = Quartanion.UnitZ.RotateBy(neck);
+
+            //正規直交基底に使う
+            var spineX = Quartanion.UnitX.RotateBy(spine);
+            var spineY = Quartanion.UnitY.RotateBy(spine);
+            var spineZ = Quartanion.UnitZ.RotateBy(spine);
+
+            var neckZfromSpine = new Quartanion
+            {
+                X = neckZ.Product(spineX),
+                Y = neckZ.Product(spineY),
+                Z = neckZ.Product(spineZ)
+            };
+
+            robot.HeadYaw = (float)Math.Asin(neckZfromSpine.X);
+
+
+        }
+
 
     }
 }

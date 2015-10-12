@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace Baku.KinectForPepper
 {
@@ -10,6 +11,12 @@ namespace Baku.KinectForPepper
         public KinectBoneViewer()
         {
             InitializeComponent();
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
         }
 
         static KinectBoneViewer _singletonViewer;

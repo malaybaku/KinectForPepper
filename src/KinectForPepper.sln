@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectForPepper", "KinectForPepper\KinectForPepper.csproj", "{18335E2B-F176-4245-B6D0-AECE6870A73B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectForPepper", "KinectForPepper\KinectForPepper.csproj", "{04D7C3BD-D2AE-4857-B0B0-20A507F3E1C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLowPassFilter", "TestLowPassFilter\TestLowPassFilter.csproj", "{F1572E4A-0A06-4A58-BF82-C8B8EC14ADAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{18335E2B-F176-4245-B6D0-AECE6870A73B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18335E2B-F176-4245-B6D0-AECE6870A73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18335E2B-F176-4245-B6D0-AECE6870A73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18335E2B-F176-4245-B6D0-AECE6870A73B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04D7C3BD-D2AE-4857-B0B0-20A507F3E1C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04D7C3BD-D2AE-4857-B0B0-20A507F3E1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04D7C3BD-D2AE-4857-B0B0-20A507F3E1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04D7C3BD-D2AE-4857-B0B0-20A507F3E1C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1572E4A-0A06-4A58-BF82-C8B8EC14ADAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1572E4A-0A06-4A58-BF82-C8B8EC14ADAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1572E4A-0A06-4A58-BF82-C8B8EC14ADAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1572E4A-0A06-4A58-BF82-C8B8EC14ADAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

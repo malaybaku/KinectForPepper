@@ -27,6 +27,22 @@ namespace Baku.KinectForPepper
         public int DisplayHeight => _kinectSensor.DepthFrameSource.FrameDescription.Height;
         public bool IsKinectSensorAvailable => _kinectSensor.IsAvailable;
 
+        /// <summary>特定のインデックスに割り振られた人だけに追尾するかどうかを取得、設定します。インデックスはFixedBodyIndexの値として設定します。</summary>
+        public bool IsBodyIndexFixed { get; set; }
+        private int _fixedBodyIndex = 0;
+        /// <summary>指定したインデックスに割り振られた人だけを追尾します。このプロパティを有効かするにはIsBodyIndexFixedプロパティをtrueに設定してください。</summary>
+        public int FixedBodyIndex
+        {
+            get { return _fixedBodyIndex; }
+            set
+            {
+                if(value >= 0 && value <= 5)
+                {
+                    _fixedBodyIndex = value;
+                }
+            }
+        }
+
         /// <summary>センサが利用可能か不可能かが切り替わると発火します。</summary>
         public event EventHandler<IsAvailableChangedEventArgs> IsAvailableChanged;
         /// <summary>検出しているボーン情報が更新されると発火します。</summary>
@@ -62,12 +78,23 @@ namespace Baku.KinectForPepper
 
             if (!dataReceived) return;
 
-            Body body = _bodies.FirstOrDefault(b => b.IsTracked);
-
-            if(body != null)
+            if (IsBodyIndexFixed)
             {
-                BodyUpdated?.Invoke(this, new BodyEventArgs(body));
+                Body fixedBody = _bodies[FixedBodyIndex];
+                if(fixedBody != null && fixedBody.IsTracked)
+                {
+                    BodyUpdated?.Invoke(this, new BodyEventArgs(fixedBody));
+                }
             }
+            else
+            {
+                Body body = _bodies.FirstOrDefault(b => b.IsTracked);
+                if (body != null)
+                {
+                    BodyUpdated?.Invoke(this, new BodyEventArgs(body));
+                }
+            }
+
         }
 
         private void OnKinectSensorIsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
